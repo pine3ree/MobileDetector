@@ -18,17 +18,21 @@ Mobile device detection using https://github.com/serbanghita/Mobile-Detect
 
 - You can now access the following variables:
 
-```
-$pimple->get('mobileDetect');
+    ```php
+    $pimple->get('mobileDetect'); // Detection\MobileDetect instance
 
-$config->mobileDetect;
-$config->isMobile;
-$config->isTablet;
-$config->isPhone;
+    // $config is available for application using processwire api even if not
+    // rendering a $page
+    $config->mobileDetect; // same Detection\MobileDetect instance
 
-$page->mobileDetect;
-$page->isMobile;
-$page->isTablet;
-$page->isPhone;
-```
+    $config->isMobile; // bool
+    $config->isTablet; // bool
+    $config->isPhone;  // bool
+
+    $page->mobileDetect; // same Detection\MobileDetect instance
+
+    $page->isMobile; // bool
+    $page->isTablet; // bool
+    $page->isPhone;  // bool
+    ```
 
