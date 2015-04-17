@@ -31,7 +31,7 @@ class MobileDetector extends WireData implements Module
     public function ready()
     {
         $this->activate();
-        $this->addHookBefore('render', $this, 'onBeforePageRender');
+        $this->addHookBefore('Page::render', $this, 'onBeforePageRender');
     }
 
     public function onBeforePageRender(HookEvent $event)
