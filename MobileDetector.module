@@ -14,30 +14,28 @@ class MobileDetector extends WireData implements Module
     {
         return array(
             'title'    => 'Mobile Device Detector',
-            'version'  => 10,
+            'version'  => 11,
             'summary'  => 'Detect client device type',
             'author'   => 'pine3ree',
             'href'     => 'https://github.com/pine3ree/MobileDetector',
             'singular' => true,
-            'autoload' => true,
+            'autoload' => function () {
+                $page = wire('page');
+                return !($page instanceof Page && $page->template == 'admin');
+            },
             'requires' => 'Pimpled',
         );
     }
 
     public function ready()
     {
-        if ($this->page && $this->page->template == 'admin') {
-            return;
-        }
-
         $this->addMobileDetector();
-
         $this->addHookBefore('Page::render', $this, 'onBeforePageRender');
     }
 
     public function onBeforePageRender(HookEvent $event)
     {
-        return $this->enableInPage($event);
+        $this->enableInPage($event);
     }
 
     protected function addMobileDetector()
@@ -116,11 +114,14 @@ class MobileDetector extends WireData implements Module
 
     public function ___install()
     {
-        if(version_compare(PHP_VERSION, '5.3.8', '<')) {
+        if (version_compare(PHP_VERSION, '5.3.8', '<')) {
             throw new WireException("This module requires PHP 5.3.8 or newer.");
         }
 
-        $pwVer = 100 * ProcessWire::versionMajor + 10 * ProcessWire::versionMinor + ProcessWire::versionRevision;
+        $pwVer = 100 * ProcessWire::versionMajor
+            + 10 * ProcessWire::versionMinor
+            + 1 * ProcessWire::versionRevision
+        ;
 
         if($pwVer < 250) {
             throw new WireException("This module requires ProcessWire 2.5.0 or newer.");
