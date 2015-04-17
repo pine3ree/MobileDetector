@@ -1,8 +1,8 @@
 # MobileDetector
-Mobile device detection module for Processwire 2.5+ using https://github.com/serbanghita/Mobile-Detect
+
+Mobile device detection using https://github.com/serbanghita/Mobile-Detect
 
 ## Install
-- This module requires Pimpled PW module
 
 - Download/install composer and add "mobiledetect/mobiledetectlib": "2.8.*" package
 
@@ -18,21 +18,17 @@ Mobile device detection module for Processwire 2.5+ using https://github.com/ser
 
 - You can now access the following variables:
 
-  ```php
-  $pimpled->get('mobileDetect'); // Detection\MobileDetect instance
-  
-  // $config (and variants wire('config') / wire()->config / $wire->config) is available for 
-  // apps using pw apithat are not rendering a $page
-  
-  $config->mobileDetect; // same Detection\MobileDetect instance
-  
-  $config->isMobile; // bool
-  $config->isTablet; // bool
-  $config->isPhone;  // bool
-  
-  $page->mobileDetect; // same Detection\MobileDetect instance
-  
-  $page->isMobile; // bool
-  $page->isTablet; // bool
-  $page->isPhone;  // bool
-  ```
+```
+$pimple->get('mobileDetect');
+
+$config->mobileDetect;
+$config->isMobile;
+$config->isTablet;
+$config->isPhone;
+
+$page->mobileDetect;
+$page->isMobile;
+$page->isTablet;
+$page->isPhone;
+```
+
