@@ -26,20 +26,13 @@ class MobileDetector extends WireData implements Module
 
     public function ready()
     {
-        if ($this->page->template == 'admin') {
+        if ($this->page && $this->page->template == 'admin') {
             return;
         }
 
-        static $initialized = false;
+        $this->addMobileDetector();
 
-        if (!$initialized) {
-
-            $this->addMobileDetector();
-
-            $this->addHookBefore('Page::render', $this, 'onBeforePageRender');
-
-            $initialized = true;
-        }
+        $this->addHookBefore('Page::render', $this, 'onBeforePageRender');
     }
 
     public function onBeforePageRender(HookEvent $event)
