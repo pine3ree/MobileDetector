@@ -30,16 +30,22 @@ class MobileDetector extends WireData implements Module
 
     public function ready()
     {
-        $this->addMobileDetector();
-        $this->addHookBefore('Page::render', $this, 'onBeforePageRender');
+        $this->activate();
+        $this->addHookBefore('render', $this, 'onBeforePageRender');
     }
 
     public function onBeforePageRender(HookEvent $event)
     {
-        $this->enableInPage($event);
+        $page = $event->object;
+        
+        if ($page->template == 'admin' || $page->disableMobileDetect) {
+            return;
+        }
+
+        $this->addToPage($page);
     }
 
-    protected function addMobileDetector()
+    protected function activate()
     {
         $pimple = $this->wire('pimple');
 
@@ -47,7 +53,14 @@ class MobileDetector extends WireData implements Module
             return new Detection\MobileDetect();
         });
 
-        $this->addHookProperty('Config::mobileDetect', function (HookEvent $event) use ($pimple) {
+        $this->addToConfig($this->config);
+    }
+
+    protected function addToConfig(Config $config)
+    {
+        $pimple = $this->wire('pimple');
+
+        $config->addHookProperty('mobileDetect', function (HookEvent $event) use ($pimple) {
             static $mobileDetect;
             if (null === $mobileDetect) {
                 $mobileDetect = $pimple->get('mobileDetect');
@@ -55,7 +68,7 @@ class MobileDetector extends WireData implements Module
             $event->return = $mobileDetect;
         });
 
-        $this->addHookProperty('Config::isMobile', function (HookEvent $event) {
+        $config->addHookProperty('isMobile', function (HookEvent $event) {
             static $is_mobile = null;
             if (null === $is_mobile) {
                 $is_mobile = $event->object->mobileDetect->isMobile();
@@ -63,7 +76,7 @@ class MobileDetector extends WireData implements Module
             $event->return = $is_mobile;
         });
 
-        $this->addHookProperty('Config::isTablet', function (HookEvent $event) {
+        $config->addHookProperty('isTablet', function (HookEvent $event) {
             static $is_tablet = null;
             if (null === $is_tablet) {
                 $is_tablet = $event->object->mobileDetect->isTablet();
@@ -71,7 +84,7 @@ class MobileDetector extends WireData implements Module
             $event->return = $is_tablet;
         });
 
-        $this->addHookProperty('Config::isPhone', function (HookEvent $event) {
+        $config->addHookProperty('isPhone', function (HookEvent $event) {
             static $is_phone = null;
             if (null === $is_phone) {
                 $is_phone = $event->object->isMobile && !$event->object->isTablet;
@@ -80,15 +93,11 @@ class MobileDetector extends WireData implements Module
         });
     }
 
-    protected function enableInPage(HookEvent $event)
+    protected function addToPage(Page $page)
     {
-        $page = $event->object;
-
-        if ($page->template == 'admin' || $page->disableMobileDetect) return;
-
         $config = $this->config;
 
-        $this->addHookProperty('Page::isMobile', function (HookEvent $event) use ($config) {
+        $page->addHookProperty('isMobile', function (HookEvent $event) use ($config) {
             static $is_mobile = null;
             if (null === $is_mobile) {
                 $is_mobile = $config->isMobile;
@@ -96,7 +105,7 @@ class MobileDetector extends WireData implements Module
             $event->return = $is_mobile;
         });
 
-        $this->addHookProperty('Page::isTablet', function (HookEvent $event) use ($config) {
+        $page->addHookProperty('isTablet', function (HookEvent $event) use ($config) {
             static $is_tablet = null;
             if (null === $is_tablet) {
                 $is_tablet = $config->isTablet;
@@ -104,7 +113,7 @@ class MobileDetector extends WireData implements Module
             $event->return = $is_tablet;
         });
 
-        $this->addHookProperty('Page::isPhone', function (HookEvent $event) use ($config) {
+        $page->addHookProperty('isPhone', function (HookEvent $event) use ($config) {
             static $is_phone = null;
             if (null === $is_phone) {
                 $is_phone = $config->isPhone;
