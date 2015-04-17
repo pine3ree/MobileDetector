@@ -5,7 +5,8 @@
  *
  * Mobile device detection using https://github.com/serbanghita/Mobile-Detect
  *
- * @author maks feltrin - pine3ree <pine3ree(AT)gmail(DOT)com>
+ * @author maks feltrin - pine3ree
+ * @copyright 2014 pine3ree
  */
 
 class MobileDetector extends WireData implements Module
