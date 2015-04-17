@@ -15,7 +15,7 @@ class MobileDetector extends WireData implements Module
     {
         return array(
             'title'    => 'Mobile Device Detector',
-            'version'  => 11,
+            'version'  => 12,
             'summary'  => 'Detect client device type',
             'author'   => 'pine3ree',
             'href'     => 'https://github.com/pine3ree/MobileDetector',
